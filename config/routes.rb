@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'thank-you' => "job_links#info_page"
 
   resources :job_applications
-  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: "users/omniauth_callbacks" } 
+  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: "users/omniauth_callbacks" }
 
 
   devise_scope :user do
@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
   get 'products' => 'pages#price_page', as: :price_page
 
+  get 'add_user_resume_and_phone' => 'pages#add_user_resume_and_phone', as: :resume_and_phone
+  patch 'update_user' => 'pages#update_user', as: :update_user
 
   get 'share' => 'pages#sharing', as: :share
 

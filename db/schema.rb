@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170123022043) do
+ActiveRecord::Schema.define(version: 20170123221549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20170123022043) do
     t.integer  "user_resume_file_size"
     t.datetime "user_resume_updated_at"
     t.boolean  "done_searching"
+    t.integer  "skill_level"
   end
 
   add_index "job_links", ["user_id"], name: "index_job_links_on_user_id", using: :btree
@@ -101,10 +102,10 @@ ActiveRecord::Schema.define(version: 20170123022043) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
-    t.string   "resume_file_name",                            null: false
-    t.string   "resume_content_type",                         null: false
-    t.integer  "resume_file_size",                            null: false
-    t.datetime "resume_updated_at",                           null: false
+    t.string   "resume_file_name"
+    t.string   "resume_content_type"
+    t.string   "resume_file_size"
+    t.string   "resume_updated_at"
     t.integer  "credits",                        default: 1
     t.string   "parent_code"
     t.string   "referral_code"
@@ -113,6 +114,8 @@ ActiveRecord::Schema.define(version: 20170123022043) do
     t.integer  "money_earned"
     t.string   "provider"
     t.string   "uid"
+    t.string   "industry"
+    t.string   "current_position"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

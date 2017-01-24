@@ -29,6 +29,10 @@
 #  referred_users_purchases_count :integer
 #  current_discount               :string
 #  money_earned                   :integer
+#  provider                       :string
+#  uid                            :string
+#  industry                       :string
+#  current_position               :string
 #
 
 require 'securerandom'
@@ -49,19 +53,22 @@ class User < ActiveRecord::Base
                         application/msword
                         application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
 
-  validates_attachment_presence :resume
+  # validates_attachment_presence :resume
   validates :first_name, presence: true, on: :create
   validates :last_name, presence: true, on: :create
 
   has_many :job_links
   after_create :create_user_code
 
+
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-      user.first_name = auth.info.first-name   # assuming the user model has a name
-      user.last_name = auth.info.last-name
+      user.industry = auth.extra.raw_info.industry
+      user.first_name = auth.info.first_name   # assuming the user model has a name
+      user.last_name = auth.info.last_name
        # assuming the user model has an image
     # If you are using confirmable and the provider(s) you use validate emails,
     # uncomment the line below to skip the confirmation emails.

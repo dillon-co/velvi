@@ -20,6 +20,7 @@
 #  user_resume_file_size    :integer
 #  user_resume_updated_at   :datetime
 #  done_searching           :boolean
+#  skill_level              :integer
 #
 
 require 'indeed_search_worker'
@@ -33,24 +34,29 @@ class JobLink < ActiveRecord::Base
   belongs_to :user
   has_many :job_applications
   after_create  :run_search #:call_search_worker
-  after_update :call_application_worker
+  after_create :call_application_worker
   # validates_presence_of :job_title
   accepts_nested_attributes_for :job_applications
 
-  has_attached_file :user_resume 
+  has_attached_file :user_resume
   validates_attachment :user_resume,
                        :content_type => {:content_type => %w(
                         image/jpeg
-                        image/jpg 
+                        image/jpg
                         image/png
-                        application/pdf 
-                        application/msword 
+                        application/pdf
+                        application/msword
                         application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
 
+   enum skill_level: {
+     'beginner' => 0,
+     'intermediate' => 1,
+     'advanvced' => 2
+   }
   ## Solution: save each paginated page in an array and run an each loop on that
 
   def run_search
-    agent = Mechanize.new 
+    agent = Mechanize.new
     agent.get('http://www.indeed.com/')
     fill_out_search_form(agent)
     search_and_create_job_application(agent)
@@ -61,7 +67,7 @@ class JobLink < ActiveRecord::Base
     form["q"] = job_title
     form["l"] =  job_location
     form.submit
-  end 
+  end
 
 
   def search_and_create_job_application(agent)
@@ -71,8 +77,8 @@ class JobLink < ActiveRecord::Base
     available_jobs = Array.new
     all_threads = []
     until @counter == 12
-      all_threads << Thread.new do 
-        begin 
+      all_threads << Thread.new do
+        begin
           search_page = agent.page
             agent.page.search(".result:contains('Easily apply')").each do |title|
               # byebug
@@ -82,15 +88,15 @@ class JobLink < ActiveRecord::Base
               job_title_company_location_array = [t, c, l]
               next if job_applications.where(title: job_title_company_location_array[0], company: job_title_company_location_array[1]).any? || !(agent.page.uri.to_s.match(/indeed.com/))
               indeed_job_address = "http://www.indeed.com#{title.at('a').attributes['href'].value}"
-              
+
               available_jobs << add_available_jobs_to_array(agent, job_title_company_location_array, path_to_resume, indeed_job_address)
-            end 
+            end
         rescue Exception => e
           puts "\n\n#{e}\n\n"
           # byebug
-          next 
-        end  
-      end  
+          next
+        end
+      end
       break if !(search_page.at_css(".np:contains('Next »')"))
       indeed_base = search_page.uri.to_s.split("&start").first
       next_page = "#{indeed_base}&start=#{@counter+=1}0"
@@ -98,14 +104,14 @@ class JobLink < ActiveRecord::Base
       puts "===\n\n#{agent.page.uri}"
     end
     all_threads.each(&:join)
-    create_job_applications(available_jobs) 
-    done_searching = true  
-  end  
+    create_job_applications(available_jobs)
+    done_searching = true
+  end
 
   def create_job_applications(available_jobs_array)
     puts "\n\n#{'===='*40}\n\n\n -----CREATING JOB APPLICATIONS WITH ARRAY----- \n\n\n\n\n\n"
     job_applications.create(available_jobs_array)
-  end  
+  end
 
   def add_available_jobs_to_array(agent, job_attributes, path_to_resume, indeed_job_url)
     puts "\n\n#{'===='*40}\n -----CREATING HASH FROM----- \n#{agent.page.uri}\n\n"
@@ -113,8 +119,8 @@ class JobLink < ActiveRecord::Base
         return  {
                  indeed_link: indeed_job_url,
                  title: job_attributes[0],
-                 company: job_attributes[1], 
-                 location: job_attributes[2], 
+                 company: job_attributes[1],
+                 location: job_attributes[2],
                  user_name: user_attribute_array[0],
                  user_email: user_attribute_array[1],
                  user_phone_number: user_attribute_array[2],
@@ -125,11 +131,11 @@ class JobLink < ActiveRecord::Base
         return {
                 indeed_link: indeed_job_url,
                 title: job_attributes[0],
-                company: job_attributes[1], 
-                location: job_attributes[2],     
+                company: job_attributes[1],
+                location: job_attributes[2],
               }
     end
-  end  
+  end
 
 
   def user_attribute_array
@@ -139,23 +145,23 @@ class JobLink < ActiveRecord::Base
 
   def resume_key
     user != nil ? user.resume.url.split('http://s3.amazonaws.com/job-bot-bucket/').last.split('?').first : user_resume.url.split('http://s3.amazonaws.com/job-bot-bucket/').last.split('?').first
-  end  
+  end
 
   def update_job_applications_with_user_info
-    job_applications.each do|j| 
+    job_applications.each do|j|
       j.update(user_name: "#{user_first_name} #{user_last_name}",
         user_email: user_email,
         user_phone_number: user_phone_number,
         user_resume_path: resume_key,
-        user_cover_letter: user_cover_letter 
+        user_cover_letter: user_cover_letter
                                         )
-      j.apply_to_job if j.should_apply == true      
-    end  
-  end  
+      j.apply_to_job if j.should_apply == true
+    end
+  end
 
   def call_search_worker
     SearchWorker.perform_async(id)
-  end  
+  end
 
   def call_application_worker
     if user_id != nil
@@ -163,8 +169,7 @@ class JobLink < ActiveRecord::Base
     elsif user_first_name != nil
       UserLessApplicationWorker.perform_async(id)
     else
-      puts "Still Editing."    
-    end  
-  end  
+      puts "Still Editing."
+    end
+  end
 end
-

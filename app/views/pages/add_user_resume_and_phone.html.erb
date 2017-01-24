@@ -1,0 +1,18 @@
+<% if user_signed_in? %>
+  <div>
+    <h1>Just A Few Things</h1>
+    <%= form_for @user, url: update_user_path, method: :patch, html: {multipart: true} do |f|%>
+      <% if @user.phone_number == nil %>
+        <h3>Phone Number</h3>
+        <%= f.text_field :phone_number %><br /><br />
+      <% end %>
+      <h3>Upload Resumé </h3>
+      <% if @user.resume.present? %>
+        <p>Leave blank if you want to use the one on file.</p>
+      <% end %>
+      <%= f.file_field :resume %><br/><br/>
+      <%= hidden_field_tag 'coming_from', 'the_good_page' %>
+      <%= f.submit "Auto Apply", class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+<% end %>

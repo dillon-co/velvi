@@ -6,11 +6,18 @@
   <meta name="google-site-verification" content="EHcZ0lmP_mzZdT6fUxYyNnw1Q2QydLXe3XV8305l0pc"/>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
-  <%#= javascript_include_tag :defaults %> 
+  <%#= javascript_include_tag :defaults %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <%= render 'layouts/nav' %>
+  <div class='container'>
+    <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %> center" style="margin-top: 60px; padding: 15px;">
+      <%= value %>
+    </div>
+    <% end %>
+  </div>
   <progress id='pb' class="progress progress" value=0  max="1000"></progress>
 <div class="container">
   <%= yield %>

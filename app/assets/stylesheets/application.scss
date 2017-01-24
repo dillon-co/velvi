@@ -31,7 +31,8 @@ h1{
   font-family: 'Montserrat', sans-serif;
 }
 .main-search-button{
-  margin-top: 27px;  
+  margin-top: 27px;
+  min-width: 400px;  
 }
 
 // body { padding-top: 70px; }
@@ -98,7 +99,7 @@ h1{
 }
 
 .title{
-  color: rgb(112,51,130);  
+  color: rgb(112,51,130);
 }
 
 .subtitle{
@@ -191,7 +192,7 @@ h1{
 
 .old-price{
   text-decoration: line-through;
-  
+
 }
 
 .progress[value]{
@@ -226,5 +227,3 @@ h1{
   height: 5px;
   background-color: #47CE9A;
 }
-
-

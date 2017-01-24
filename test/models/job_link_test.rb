@@ -20,6 +20,7 @@
 #  user_resume_file_size    :integer
 #  user_resume_updated_at   :datetime
 #  done_searching           :boolean
+#  skill_level              :integer
 #
 
 require 'test_helper'

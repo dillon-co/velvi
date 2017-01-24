@@ -29,6 +29,10 @@
 #  referred_users_purchases_count :integer
 #  current_discount               :string
 #  money_earned                   :integer
+#  provider                       :string
+#  uid                            :string
+#  industry                       :string
+#  current_position               :string
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

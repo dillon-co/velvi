@@ -9,21 +9,28 @@
   <div class='container-fluid main-jumbo'>
     <% if user_signed_in? %>
       <%= form_for @job_link do |f| %>
-        <div class='col-md-7 offset-md-2 row'>
-          <div class='col-lg-5 job-title'>
+        <div class='col-md-9 offset-md-2 row '>
+          <div class='col-lg-4 job-title'>
             <h5>Job Title / Industry</h5>
             <%= f.text_field :job_title %><br><br />
           </div>
-          <div class='col-lg-5'>
+          <div class='col-lg-4'>
             <h5>Where</h5>
             <%= f.text_field :job_location %><br /><br />
           </div>
-          <div class='col-lg-2 button-element' align='center', onclick="generateProgressBar()" >
-            <%= f.submit "Explore", class: 'btn btn-primary main-search-button', id: 'job-search-button' %>
+          <div class="col-lg-4 ">
+            <h5>Skill Level</h5>
+            <%= f.select :skill_level, JobLink.skill_levels.keys.to_a %>
+          </div>
+          <div class='row justify-content-center'>
+            <div class='button-element col-md-5', onclick="generateProgressBar()" >
+              <%= f.submit "Auto Apply", class: 'btn btn-primary main-search-button', id: 'job-search-button' %>
+            </div>
           </div>
         </div>
       <% end %>
     <% else %>
+  <div class="jumbotron">
       <div class="container fluid centered row">
         <div class="col-md-7 offset-md-2">
           <h2>Sync your linkedin to get started</h2>
@@ -32,6 +39,7 @@
           <%= render 'layouts/landing' %>
         </div>
      </div>
+   </div>
     <% end %>
   </div>
 </div>

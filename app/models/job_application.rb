@@ -25,7 +25,6 @@
 require 'capybara/poltergeist'
 require 'open-uri'
 require 'watir'
-
 # require 'watir-webdriver'
 # require 'watir-webdriver/wait'
 require 'headless'
@@ -132,7 +131,7 @@ class JobApplication < ActiveRecord::Base
 
   def apply_to_job
     @counter = 0
-    if self.should_apply == true  
+    if self.should_apply == true
       until self.applied_to == true || @counter == 3
         begin
         puts "\n\n\n\n\n#{'∞∞∞∞∞∞∞'*20}\n\n#{indeed_link} ---------- id: #{id}\n\n\n\n"
