@@ -329,7 +329,7 @@ DEPENDENCIES
   annotate
   aws-sdk (~> 2)
   better_errors
-  bootstrap (~> 4.0.0.alpha3)
+  bootstrap (~> 4.0.0.alpha6)
   byebug
   coffee-rails (~> 4.1.0)
   devise
