@@ -12,15 +12,15 @@
         <div class='col-md-9 offset-md-2 row '>
           <div class='col-lg-4 job-title'>
             <h5>Job Title / Industry</h5>
-            <%= f.text_field :job_title %><br><br />
+            <%= f.text_field :job_title %><br>
           </div>
           <div class='col-lg-4'>
             <h5>Where</h5>
-            <%= f.text_field :job_location %><br /><br />
+            <%= f.text_field :job_location %><br />
           </div>
           <div class="col-lg-4 ">
             <h5>Skill Level</h5>
-            <%= f.select :skill_level, JobLink.skill_levels.keys.to_a %>
+            <%= f.select :skill_level, JobLink.skill_levels.keys.to_a, selected: 'beginner' %>
           </div>
           <div class='row justify-content-center'>
             <div class='button-element col-md-5', onclick="generateProgressBar()" >

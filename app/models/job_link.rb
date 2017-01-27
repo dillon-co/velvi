@@ -23,7 +23,7 @@
 #  skill_level              :integer
 #
 
-require 'indeed_search_worker'
+require 'search_worker'
 require 'job_application_worker'
 require 'mechanize'
 require 'open-uri'
@@ -33,9 +33,10 @@ class JobLink < ActiveRecord::Base
 
   belongs_to :user
   has_many :job_applications
-  after_create  :run_search #:call_search_worker
-  after_create :call_application_worker
-  # validates_presence_of :job_title
+  after_update :call_search_worker
+
+
+  validates_presence_of :job_title
   accepts_nested_attributes_for :job_applications
 
   has_attached_file :user_resume
@@ -75,9 +76,7 @@ class JobLink < ActiveRecord::Base
     @counter = 0
     search_page = agent.page
     available_jobs = Array.new
-    all_threads = []
     until @counter == 12
-      all_threads << Thread.new do
         begin
           search_page = agent.page
             agent.page.search(".result:contains('Easily apply')").each do |title|
@@ -88,7 +87,6 @@ class JobLink < ActiveRecord::Base
               job_title_company_location_array = [t, c, l]
               next if job_applications.where(title: job_title_company_location_array[0], company: job_title_company_location_array[1]).any? || !(agent.page.uri.to_s.match(/indeed.com/))
               indeed_job_address = "http://www.indeed.com#{title.at('a').attributes['href'].value}"
-
               available_jobs << add_available_jobs_to_array(agent, job_title_company_location_array, path_to_resume, indeed_job_address)
             end
         rescue Exception => e
@@ -96,21 +94,20 @@ class JobLink < ActiveRecord::Base
           # byebug
           next
         end
-      end
       break if !(search_page.at_css(".np:contains('Next »')"))
       indeed_base = search_page.uri.to_s.split("&start").first
       next_page = "#{indeed_base}&start=#{@counter+=1}0"
       agent.get next_page
       puts "===\n\n#{agent.page.uri}"
     end
-    all_threads.each(&:join)
     create_job_applications(available_jobs)
     done_searching = true
   end
 
   def create_job_applications(available_jobs_array)
-    puts "\n\n#{'===='*40}\n\n\n -----CREATING JOB APPLICATIONS WITH ARRAY----- \n\n\n\n\n\n"
+    puts "\n\n#{'===='*40}\n\n\n -----CREATING JOB APPLICATIONS WITH ARRAY FROM SEARCH [#{job_title}]----- \n\n\n\n\n\n"
     job_applications.create(available_jobs_array)
+    apply_to_right_jobs
   end
 
   def add_available_jobs_to_array(agent, job_attributes, path_to_resume, indeed_job_url)
@@ -125,14 +122,18 @@ class JobLink < ActiveRecord::Base
                  user_email: user_attribute_array[1],
                  user_phone_number: user_attribute_array[2],
                  user_resume_path: path_to_resume,
-                 user_cover_letter: user_attribute_array[3]
-                 }
+                 user_cover_letter: user_attribute_array[3],
+                 user_skill_level: skill_level,
+                 user_search_query: job_title
+                }
     else
         return {
                 indeed_link: indeed_job_url,
                 title: job_attributes[0],
                 company: job_attributes[1],
                 location: job_attributes[2],
+                user_skill_level: skill_level,
+                user_search_query: job_title
               }
     end
   end
@@ -148,8 +149,9 @@ class JobLink < ActiveRecord::Base
   end
 
   def update_job_applications_with_user_info
-    job_applications.each do|j|
-      j.update(user_name: "#{user_first_name} #{user_last_name}",
+    job_applications.each do |j|
+      j.update(
+        user_name: "#{user_first_name} #{user_last_name}",
         user_email: user_email,
         user_phone_number: user_phone_number,
         user_resume_path: resume_key,
@@ -161,6 +163,22 @@ class JobLink < ActiveRecord::Base
 
   def call_search_worker
     SearchWorker.perform_async(id)
+  end
+
+  def apply_to_right_jobs
+
+    RightJobsWorker.perform_async(id)
+  end
+
+  def check_for_job_search_accuracy
+    job_applications.all.each do |j|
+      begin
+        j.check_should_apply
+      rescue => e
+        puts e
+        next
+      end
+    end
   end
 
   def call_application_worker

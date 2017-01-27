@@ -20,18 +20,31 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  should_apply      :boolean          default(TRUE)
+#  user_skill_level  :integer
+#  user_search_query :string
 #
 
 require 'capybara/poltergeist'
 require 'open-uri'
 require 'watir'
+require 'mechanize'
+require 'open-uri'
+require 'ots'
+
 # require 'watir-webdriver'
 # require 'watir-webdriver/wait'
 require 'headless'
+# T0DO: FIll OUT FORMS Generically ¿¿Watson API??
 
 class JobApplication < ActiveRecord::Base
   belongs_to :job_link
   # after_save :apply_to_job, unless: :applied_to
+
+  enum user_skill_level: {
+    'beginner' => 0,
+    'intermediate' => 1,
+    'advanvced' => 2
+  }
 
    def fill_out_modal_with_text_first(input_frame)
     fill_out_text_form(input_frame)
@@ -164,6 +177,90 @@ class JobApplication < ActiveRecord::Base
     end
   end
 
+  def check_should_apply
+    agent = Mechanize.new
+    agent.get(indeed_link)
+    puts agent.page.uri
+    if agent.page.uri.to_s.split('/').third.split('.').second == 'indeed'
+      search_and_skill_level_match = compare_skill_requirements(agent)
+      # binding.pry
+      if search_and_skill_level_match.first >= 50 && search_and_skill_level_match.second == true
+        puts "\n YES \n"
+        self.update(should_apply: true)
+      else
+        puts "\n MEOW \n"
+        self.update(should_apply: false)
+      end
+      # summarize_description(text_description)
+    else
+      puts "\n\n NOT HERE \n\n"
+      self.update(should_apply: false)
+    end
+  end
+
+  def compare_skill_requirements(agent)
+    years_and_summary = get_required_years_and_summary(agent)
+    search_match_percent = match_keywords_from_summary_with_search_query(years_and_summary.last)
+    [search_match_percent, skill_levels_match?(years_and_summary.first)]
+  end
+
+  def match_keywords_from_summary_with_search_query(sum)
+    all_words = sum.join(' ')
+    words_matched = 0
+    parsed_summary = OTS.parse(all_words)
+    query_array = user_search_query.split(' ')
+    query_array.each do |s|
+      words_matched += 1 if parsed_summary.keywords.include?(s.downcase) || parsed_summary.keywords.include?(s)
+    end
+    search_percent_match = (words_matched.to_f / query_array.length.to_f)*100
+    return search_percent_match
+  end
+
+  def skill_levels_match?(required_years)
+    average_required_years = get_average_required_years(required_years)
+    required_skill_level = years_to_skill_level(average_required_years)
+    required_skill_level == user_skill_level ? true : false
+  end
+
+  def get_required_years_and_summary(agent)
+    summary_attributes = agent.page.search("#job_summary").first.children.map { |c| c.text.to_s }
+    required_experience = []
+    summary_attributes.each_with_index do |attribute, ind|
+      if attribute.split(' ').map!{|w| w.downcase}.include?('experience:')
+        required_experience << summary_attributes[ind+1]
+      end
+    end
+    required_years = get_all_years_in_description(required_experience)
+    [required_years, summary_attributes]
+  end
+
+  def get_average_required_years(arr)
+    arr.length > 0 ? (arr.inject(:+) / arr.length) : user_skill_level
+  end
+
+  def get_all_years_in_description(req_ex)
+    years = []
+    req_ex.each do |str|
+      words = str.split(' ')
+      words.each_with_index do |w, i|
+        if w.downcase == 'year' || w == 'years'
+          years << words[i-1].to_i
+        end
+      end
+    end
+    years
+  end
+
+  def years_to_skill_level(required_years)
+    if required_years < 3
+      return 'beginner'
+    elsif required_years.between?(3, 5)
+      return 'intermediate'
+    elsif required_years >= 5
+      return "advanced"
+    end
+  end
+
   def user_resume
     Aws.config.update({
       region: 'us-east-1',
@@ -190,7 +287,6 @@ class JobApplication < ActiveRecord::Base
   def clean_up_temporary_binary_file
     File.delete(local_file_path) if File.exist?(local_file_path)
   end
-
 
   def resume_object(s3)
     s3.get_object(bucket: 'job-bot-bucket', key: user_resume_path).body

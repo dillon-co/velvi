@@ -19,10 +19,10 @@
 #  last_sign_in_ip                :inet
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
-#  resume_file_name               :string           not null
-#  resume_content_type            :string           not null
-#  resume_file_size               :integer          not null
-#  resume_updated_at              :datetime         not null
+#  resume_file_name               :string
+#  resume_content_type            :string
+#  resume_file_size               :string
+#  resume_updated_at              :string
 #  credits                        :integer          default(1)
 #  parent_code                    :string
 #  referral_code                  :string

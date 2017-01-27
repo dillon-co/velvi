@@ -4,8 +4,10 @@ class PagesController < ApplicationController
   end
 
   def price_page
-    user = User.find_by(referral_code: current_user.parent_code)
-    @friend = "#{user.first_name} #{user.last_name}"
+    if current_user.parent_code.present?
+      user = User.find_by(referral_code: current_user.parent_code)
+      @friend = "#{user.first_name} #{user.last_name}"
+    end
   end
 
   def profile
@@ -54,16 +56,18 @@ class PagesController < ApplicationController
   def update_user
     ### ToDo:
       # Link this to price/selling page
+      # Push To Heroku
     user = current_user
     data_hash = Hash.new
-    data_hash[:phone_number] = params["user"]["phone"] unless user.phone_number.present?
+    data_hash[:phone_number] = params["user"]["phone_nuber"] unless user.phone_number.present?
     data_hash[:resume] = params["user"]["resume"] if params['user'] != nil
     if data_hash == {} && user.phone_number.present? && user.resume.present?
       redirect_to root_path
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
-        redirect_to root_path
+        current_user.job_links.last.call_search_worker
+        redirect_to profile_path
       else
         redirect_to resume_and_phone_path, notice: "All Fields Are Required"
       end

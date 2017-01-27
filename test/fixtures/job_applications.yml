@@ -20,6 +20,8 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  should_apply      :boolean          default(TRUE)
+#  user_skill_level  :integer
+#  user_search_query :string
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

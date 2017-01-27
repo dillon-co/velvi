@@ -1,7 +1,10 @@
 class ChargesController < ApplicationController
 
   def new
-
+    if current_user.parent_code.present?
+      user = User.find_by(referral_code: current_user.parent_code)
+      @friend = "#{user.first_name} #{user.last_name}"
+    end
   end
 
   def create
@@ -18,7 +21,7 @@ class ChargesController < ApplicationController
         :coupon_code => current_user.parent_code,
         :coupon_discount => "25%"
       }
-    end  
+    end
 
     current_user.update(credits: current_credits+params[:credits].to_i)
 
@@ -44,7 +47,7 @@ class ChargesController < ApplicationController
   rescue Stripe::CardError => e
     flash[:error] = e.message
     redirect_to new_charge_path
-  end  
+  end
 
   private
 
@@ -54,6 +57,6 @@ class ChargesController < ApplicationController
     code = code.gsub(/\s+/, '')
     code = code.upcase
     COUPONS[code]
-  end  
+  end
 
 end

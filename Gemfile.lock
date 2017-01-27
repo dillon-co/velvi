@@ -166,6 +166,7 @@ GEM
       json
       rack
     orm_adapter (0.5.0)
+    ots (0.5.4)
     paperclip (5.0.0)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
@@ -339,6 +340,7 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-oauth2 (~> 1.3.1)
   omnicontacts
+  ots
   paperclip (~> 5.0.0.beta1)
   parallel
   pg (~> 0.15)

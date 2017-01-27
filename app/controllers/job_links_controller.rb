@@ -53,7 +53,7 @@ class JobLinksController < ApplicationController
         redirect_to job_link_path(@job_link)
       end
     else
-      render :new
+      render :new, flash: "There's a bug!"
     end
   end
 
@@ -75,6 +75,10 @@ class JobLinksController < ApplicationController
   private
 
   def job_link_params
-    params.require(:job_link).permit(:job_title, :job_subtitles, :job_location, :job_applications_attributes => [:id, :should_apply])
+    params.require(:job_link).permit(:job_title,
+                                     :job_subtitles,
+                                     :job_location,
+                                     :skill_level,
+                                     :job_applications_attributes => [:id, :should_apply])
   end
 end
