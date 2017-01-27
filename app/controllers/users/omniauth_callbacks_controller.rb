@@ -8,9 +8,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # More info at:
   # https://github.com/plataformatec/devise#omniauth
+  # localhost:3000/ref?d=21gMgA
 
     def linkedin
-      @user = User.from_omniauth(request.env["omniauth.auth"])
+      @user = User.from_omniauth(request.env["omniauth.auth"], request.env["omniauth.params"]["d"])
       if @user.persisted?
         sign_in_and_redirect @user #this will throw if @user is not activated
         set_flash_message(:notice, :success, :kind => "linkedin") if is_navigational_format?
