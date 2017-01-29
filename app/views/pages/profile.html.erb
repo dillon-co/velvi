@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
   <div class='row mb-12 profile-title'>
-      <div class= 'col bd-highlight p-3'>
+      <div class= 'col bd-highlight p-3 card'>
         <h1><%= @user.first_name %> <%= @user.last_name %></h1><br/>
         <%= link_to 'Edit Profile', edit_user_registration_path, class: 'btn btn-primary' %>
         <%= link_to 'Logout', destroy_user_session_path, :method => :get, class: 'btn' %>
@@ -19,15 +19,6 @@
   </div>
   <% end %>
   <div class='row'>
-    <div class="col p-4 col-md-4">
-      <div class="jumbotron">
-        <div class="centered">
-
-          <h5><%= @users_friends_count %> Friends Referred</h><br><br>
-            <%= link_to "Refer Friends", share_path, class:'btn btn-primary' %>
-        </div>
-      </div>
-    </div>
   </div>
 
 
