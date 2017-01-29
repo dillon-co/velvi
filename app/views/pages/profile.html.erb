@@ -19,22 +19,13 @@
   </div>
   <% end %>
   <div class='row'>
-    <div class="col p-4">
+    <div class="col p-4 col-md-4">
       <div class="jumbotron">
-      <h3><%= @job_links.count %> Jobs Searched For</h3>
-      </div>
-    </div>
-    <div class="col p-4">
-      <div class="jumbotron">
-      <h3><%= @job_applications_count %> Applications Submited</h3>
-      </div>
-    </div>
-    <div class="col p-4">
-      <div class="jumbotron">
-      <% if @users_friends_count > 0 %>
-        <h5><%= @users_friends_count %> Friends Referred</h>
-      <% end %>
-        <%= link_to "Refer Friends", share_path, class:'btn btn-primary' %>
+        <div class="centered">
+
+          <h5><%= @users_friends_count %> Friends Referred</h><br><br>
+            <%= link_to "Refer Friends", share_path, class:'btn btn-primary' %>
+        </div>
       </div>
     </div>
   </div>
