@@ -60,7 +60,6 @@ class PagesController < ApplicationController
     user = current_user
     data_hash = Hash.new
     data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
-    binding.pry
     data_hash[:resume] = params["user"]["resume"] if params['user'] != nil
     if data_hash == {} && user.phone_number.present? && user.resume.present?
       redirect_to root_path
