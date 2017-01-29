@@ -22,6 +22,7 @@
 #  should_apply      :boolean          default(TRUE)
 #  user_skill_level  :integer
 #  user_search_query :string
+#  application_site  :integer
 #
 
 require 'test_helper'

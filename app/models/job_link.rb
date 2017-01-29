@@ -77,31 +77,44 @@ class JobLink < ActiveRecord::Base
     search_page = agent.page
     available_jobs = Array.new
     until @counter == 12
-        begin
-          search_page = agent.page
-            agent.page.search(".result:contains('Easily apply')").each do |title|
-              # byebug
-              title.at("h2") != nil ? t = title.at("h2").text  : t = ''
-              title.at(".company") != nil ? c = title.at(".company").text  : c = 'Unknown Company'
-              title.at(".location") != nil ? l = title.at(".location").text  : l = 'Unknown location'
-              job_title_company_location_array = [t, c, l]
-              next if job_applications.where(title: job_title_company_location_array[0], company: job_title_company_location_array[1]).any? || !(agent.page.uri.to_s.match(/indeed.com/))
-              indeed_job_address = "http://www.indeed.com#{title.at('a').attributes['href'].value}"
-              available_jobs << add_available_jobs_to_array(agent, job_title_company_location_array, path_to_resume, indeed_job_address)
-            end
-        rescue Exception => e
-          puts "\n\n#{e}\n\n"
-          # byebug
-          next
-        end
-      break if !(search_page.at_css(".np:contains('Next »')"))
-      indeed_base = search_page.uri.to_s.split("&start").first
-      next_page = "#{indeed_base}&start=#{@counter+=1}0"
-      agent.get next_page
-      puts "===\n\n#{agent.page.uri}"
+      begin
+        search_page = agent.page
+        available_jobs << get_available_easily_apply_and_amazon_jobs(agent, path_to_resume)
+        indeed_base = search_page.uri.to_s.split("&start").first
+        break if !(search_page.at_css(".np:contains('Next »')"))
+        next_page = "#{indeed_base}&start=#{@counter+=1}0"
+        agent.get next_page
+        puts "===\n\n#{agent.page.uri}"
+      rescue Exception => e
+        puts "\n\n#{e}\n\n"
+        # byebug
+        next
+      end
     end
-    create_job_applications(available_jobs)
+    create_job_applications(available_jobs.flatten)
     done_searching = true
+  end
+
+  def get_available_easily_apply_and_amazon_jobs(agent, path_to_resume)
+    available_jobs = []
+    available_jobs << search_indeed_for('Easily apply', agent, path_to_resume)
+    available_jobs << search_indeed_for('Sponsored by Amazon.com', agent, path_to_resume)
+    available_jobs.flatten
+  end
+
+  def search_indeed_for(str, agent, path_to_resume)
+    available_jobs = []
+    agent.page.search(".result:contains('#{str}')").each do |title|
+      title.at("h2") != nil ? t = title.at("h2").text  : t = ''
+      title.at(".company") != nil ? c = title.at(".company").text  : c = 'Unknown Company'
+      title.at(".location") != nil ? l = title.at(".location").text  : l = 'Unknown location'
+      job_title_company_location_array = [t, c, l]
+      next if job_applications.where(title: job_title_company_location_array[0], company: job_title_company_location_array[1]).any? || (!(agent.page.uri.to_s.match(/indeed.com/) || !(agent.page.uri.match(/amazon/)) ))
+      indeed_job_address = "http://www.indeed.com#{title.at('a').attributes['href'].value}"
+      available_jobs << add_available_jobs_to_array(agent, job_title_company_location_array, path_to_resume, indeed_job_address)
+    end
+
+    available_jobs
   end
 
   def create_job_applications(available_jobs_array)
@@ -156,7 +169,7 @@ class JobLink < ActiveRecord::Base
         user_phone_number: user_phone_number,
         user_resume_path: resume_key,
         user_cover_letter: user_cover_letter
-                                        )
+        )
       j.apply_to_job if j.should_apply == true
     end
   end
@@ -166,7 +179,6 @@ class JobLink < ActiveRecord::Base
   end
 
   def apply_to_right_jobs
-
     RightJobsWorker.perform_async(id)
   end
 

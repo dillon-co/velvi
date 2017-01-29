@@ -22,6 +22,7 @@
 #  should_apply      :boolean          default(TRUE)
 #  user_skill_level  :integer
 #  user_search_query :string
+#  application_site  :integer
 #
 
 require 'capybara/poltergeist'
@@ -45,6 +46,62 @@ class JobApplication < ActiveRecord::Base
     'intermediate' => 1,
     'advanvced' => 2
   }
+
+  enum application_site: ['amazon', 'indeed']
+
+  def apply_to_job
+    if application_site == "amazon"
+      apply_from_amazon
+    else
+      apply_from_indeed
+    end
+  end
+
+  def apply_from_indeed
+    @counter = 0
+    if self.should_apply == true
+      until self.applied_to == true || @counter == 3
+        begin
+        puts "\n\n\n\n\n#{'∞∞∞∞∞∞∞'*20}\n\n#{indeed_link} ---------- id: #{id}\n\n\n\n"
+
+        browser = Watir::Browser.new :phantomjs, :args => ['--ssl-protocol=tlsv1']
+        # browser.driver.manage.timeouts.implicit_wait = 3 #3 seconds
+        browser.goto indeed_link
+        if open_modal(browser)
+          puts "clicked modal button"
+          sleep 3.5
+          if browser.iframe(id: /indeed-ia/).exists?
+            puts "found"
+            # byebug
+            input_frame = browser.iframe(id: /indeed-ia/).iframe
+              if input_frame.text_field(id: 'applicant.name').present? || input_frame.text_field(id: 'applicant.firstName').present?
+                  fill_out_modal_with_text_first(input_frame)
+              else
+                fill_out_modal_with_text_last(input_frame)
+              end
+              self.update(applied_to: true)
+          end
+        end
+        rescue => e
+          puts e
+        end
+        clean_up_temporary_binary_file
+        browser.close
+        @counter += 1
+      end
+    end
+  end
+
+  def apply_from_amazon
+    agent = Mechanize.new
+    agent.get indeed_link
+    agent.get agent.get agent.page.iframes.first.uri
+    fill_out_amazon_form(agent)
+  end
+
+  def fill_out_amazon_form(agent)
+    puts "\n\n\nWorkin on it\n\n\n"
+  end
 
    def fill_out_modal_with_text_first(input_frame)
     fill_out_text_form(input_frame)
@@ -142,64 +199,53 @@ class JobApplication < ActiveRecord::Base
     end
   end
 
-  def apply_to_job
-    @counter = 0
-    if self.should_apply == true
-      until self.applied_to == true || @counter == 3
-        begin
-        puts "\n\n\n\n\n#{'∞∞∞∞∞∞∞'*20}\n\n#{indeed_link} ---------- id: #{id}\n\n\n\n"
 
-        browser = Watir::Browser.new :phantomjs, :args => ['--ssl-protocol=tlsv1']
-        # browser.driver.manage.timeouts.implicit_wait = 3 #3 seconds
-        browser.goto indeed_link
-        if open_modal(browser)
-          puts "clicked modal button"
-          sleep 3.5
-          if browser.iframe(id: /indeed-ia/).exists?
-            puts "found"
-            # byebug
-            input_frame = browser.iframe(id: /indeed-ia/).iframe
-              if input_frame.text_field(id: 'applicant.name').present? || input_frame.text_field(id: 'applicant.firstName').present?
-                  fill_out_modal_with_text_first(input_frame)
-              else
-                fill_out_modal_with_text_last(input_frame)
-              end
-              self.update(applied_to: true)
-          end
-        end
-        rescue => e
-          puts e
-        end
-        clean_up_temporary_binary_file
-        browser.close
-        @counter += 1
-      end
-    end
-  end
 
   def check_should_apply
     agent = Mechanize.new
     agent.get(indeed_link)
     puts agent.page.uri
-    if agent.page.uri.to_s.split('/').third.split('.').second == 'indeed'
-      search_and_skill_level_match = compare_skill_requirements(agent)
-      # binding.pry
-      if search_and_skill_level_match.first >= 50 && search_and_skill_level_match.second == true
-        puts "\n YES \n"
-        self.update(should_apply: true)
-      else
-        puts "\n MEOW \n"
-        self.update(should_apply: false)
-      end
-      # summarize_description(text_description)
+    if agent.page.uri.to_s.match(/indeed/)
+      get_and_update_from_indeed(agent)
+    elsif agent.page.uri.to_s.match(/amazon/)
+      get_and_update_from_amazon(agent)
     else
       puts "\n\n NOT HERE \n\n"
       self.update(should_apply: false)
     end
   end
 
-  def compare_skill_requirements(agent)
-    years_and_summary = get_required_years_and_summary(agent)
+  def update_based_on_job_description(search_and_skill_level_match, app_site)
+    if search_and_skill_level_match.first >= 50 && search_and_skill_level_match.second == true
+      puts "\n YES \n"
+      self.update(should_apply: true, application_site: app_site)
+    else
+      puts "\n MEOW \n"
+      self.update(should_apply: false, application_site: app_site)
+    end
+  end
+
+  def get_and_update_from_indeed(agent)
+    s = compare_indeed_skill_requirements(agent)
+    update_based_on_job_description(s, "indeed")
+  end
+
+  def get_and_update_from_amazon(agent)
+    agent.get agent.page.iframes.first.uri
+    s = compare_amazon_skill_requirements(agent)
+    update_based_on_job_description(s, "amazon")
+  end
+
+  def compare_amazon_skill_requirements(agent)
+    qualifications = agent.page.search("div[@itemprop='responsibilities']").children.text
+    full_description = agent.page.search('.iCIMS_JobContainer').children.map {|c| c.text }
+    required_years = get_all_years_in_description(qualifications)
+    search_percent_match = match_keywords_from_summary_with_search_query(full_description)
+    [search_percent_match, skill_levels_match?(required_years)]
+  end
+
+  def compare_indeed_skill_requirements(agent)
+    years_and_summary = get_indeed_required_years_and_summary(agent)
     search_match_percent = match_keywords_from_summary_with_search_query(years_and_summary.last)
     [search_match_percent, skill_levels_match?(years_and_summary.first)]
   end
@@ -222,7 +268,7 @@ class JobApplication < ActiveRecord::Base
     required_skill_level == user_skill_level ? true : false
   end
 
-  def get_required_years_and_summary(agent)
+  def get_indeed_required_years_and_summary(agent)
     summary_attributes = agent.page.search("#job_summary").first.children.map { |c| c.text.to_s }
     required_experience = []
     summary_attributes.each_with_index do |attribute, ind|
@@ -230,7 +276,7 @@ class JobApplication < ActiveRecord::Base
         required_experience << summary_attributes[ind+1]
       end
     end
-    required_years = get_all_years_in_description(required_experience)
+    required_years = get_all_years_in_description(required_experience.join(" "))
     [required_years, summary_attributes]
   end
 
@@ -239,16 +285,7 @@ class JobApplication < ActiveRecord::Base
   end
 
   def get_all_years_in_description(req_ex)
-    years = []
-    req_ex.each do |str|
-      words = str.split(' ')
-      words.each_with_index do |w, i|
-        if w.downcase == 'year' || w == 'years'
-          years << words[i-1].to_i
-        end
-      end
-    end
-    years
+    req_ex.gsub(/\D/, " ").split(" ").map { |n| n.to_i }
   end
 
   def years_to_skill_level(required_years)
@@ -291,5 +328,4 @@ class JobApplication < ActiveRecord::Base
   def resume_object(s3)
     s3.get_object(bucket: 'job-bot-bucket', key: user_resume_path).body
   end
-
 end
