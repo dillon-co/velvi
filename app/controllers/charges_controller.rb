@@ -5,10 +5,12 @@ class ChargesController < ApplicationController
       user = User.find_by(referral_code: current_user.parent_code)
       @friend = "#{user.first_name} #{user.last_name}"
     end
+    !!(params[:j_id]) ? @job_id = params[:j_id] : nil
   end
 
   def create
      # Amount in cents
+    @job_id = params[:j_id]
     @amount = params[:amount]
     token = params[:stripeToken]
 

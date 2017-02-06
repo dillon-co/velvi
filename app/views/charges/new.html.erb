@@ -14,6 +14,7 @@
       <span>Amount: $<%= params[:amount].to_f/100 %></span>
       <%= hidden_field_tag "amount", params[:amount] %>
       <%= hidden_field_tag "credits", params[:credits] %>
+      <%= @job_id != nil ? hidden_field_tag "j_id", @job_id %>
     </label>
   </article>
 

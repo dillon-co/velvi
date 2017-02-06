@@ -8,6 +8,7 @@ class PagesController < ApplicationController
       user = User.find_by(referral_code: current_user.parent_code)
       @friend = "#{user.first_name} #{user.last_name}"
     end
+    !!(params[:j_id]) ? @job_id = params[:j_id] : nil
   end
 
   def profile
@@ -54,25 +55,34 @@ class PagesController < ApplicationController
   end
 
   def update_user
-    ### ToDo:
-      # Link this to price/selling page
-      # Push To Heroku
     user = current_user
     data_hash = Hash.new
     data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
     data_hash[:resume] = params["user"]["resume"] if params['user'] != nil
+    data_hash[:credits] = user.credits - 1 if user.credits > 0
     if data_hash == {} && user.phone_number.present? && user.resume.present?
-      redirect_to root_path
+      check_for_credits_and_redirect(user)
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
-        current_user.job_links.last.call_search_worker
-        redirect_to profile_path
+        check_for_credits_and_redirect(user)
       else
         redirect_to resume_and_phone_path, notice: "All Fields Are Required"
       end
     else
       redirect_to resume_and_phone_path, notice: "All Fields Are Required"
+    end
+  end
+
+  private
+
+  def check_for_credits_and_redirect(user)
+    if user.credits > 0
+      binding.pry
+      user.job_links.last.call_search_worker
+      redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
+    else
+      redirect_to price_page_path, j_id: user.job_links.last.id
     end
   end
 end

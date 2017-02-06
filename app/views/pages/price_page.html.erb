@@ -14,23 +14,32 @@
 <% if current_user.parent_code == nil %>
     <div class="">
         <!-- Three columns of text below the carousel -->
-      <div class="row offset-md-4">
+      <div class="row offset-md-3 ">
         <!-- /.col-lg-4 product-div jumbotron panel --><!-- /.col-lg-4 -->
-        <div class="col-md-4 product-div jumbotron panel">
-          <h4>10 Credits</h4>
-          <p>$49.97</p>
-          <p><%= link_to "Purchase", new_charge_path(credits: 10, amount:24997), class: 'btn btn-primary' %></p>
+        <div class="col-md-6  product-div jumbotron card">
+          <h4>5 Credits</h4>
+          <h5 class='old-price'>$318.97</h5>
+          <h3 class='new-price'>$209.97</h3>
+          <% if @job_id != nil %>
+            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:20997, j_id: @job_id), class: 'btn btn-primary' %></p>
+          <% else %>
+            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:20997), class: 'btn btn-primary' %></p>
+          <% end %>
         </div><!-- /.col-lg-4 product-div -->
       </div><!-- /.row -->
     </div>
 <% else %>
     <div class="container marketing">
         <!-- Three columns of text below the carousel -->
-        <div class="col-lg-4 product-div jumbotron panel">
+        <div class="col-lg-4 product-div jumbotron card">
           <h4>10 Credits</h4>
-          <p class='old-price'>$49.97</p>
-          <h5 class='new-price'>$37.48</h5>
-          <p><%= link_to "Purchase", new_charge_path(credits: 10, amount:19997), class: 'btn btn-primary' %></p>
+          <h5 class='old-price'>$318.97<h5>
+          <h3 class='new-price'>$199.97</h3>
+          <% if @job_id != nil %>
+            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:19997, j_id: @job_id), class: 'btn btn-primary' %></p>
+          <% else %>
+            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:19997), class: 'btn btn-primary' %></p>
+          <% end %>
         </div><!-- /.col-lg-4 product-div -->
       </div><!-- /.row -->
     </div>
