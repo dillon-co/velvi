@@ -14,33 +14,81 @@
 <% if current_user.parent_code == nil %>
     <div class="">
         <!-- Three columns of text below the carousel -->
-      <div class="row offset-md-3 ">
+      <div class="row">
+        <div class="col-md-4 product-div jumbotron card">
+          <h4>1 Credit</h4>
+          <h3 class='new-price'>$64.89</h3>
+          <% if @job_id != nil %>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:6497, j_id: @job_id), class: 'btn btn-primary' %></p>
+          <% else %>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:6497), class: 'btn btn-primary' %></p>
+          <% end %>
+        </div>
         <!-- /.col-lg-4 product-div jumbotron panel --><!-- /.col-lg-4 -->
-        <div class="col-md-6  product-div jumbotron card">
+        <div class="col-md-4 mid-product-div jumbotron card">
           <h4>5 Credits</h4>
           <h5 class='old-price'>$318.97</h5>
           <h3 class='new-price'>$209.97</h3>
           <% if @job_id != nil %>
-            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:20997, j_id: @job_id), class: 'btn btn-primary' %></p>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:20997, j_id: @job_id), class: 'btn btn-primary' %></p>
           <% else %>
-            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:20997), class: 'btn btn-primary' %></p>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:20997), class: 'btn btn-primary' %></p>
           <% end %>
-        </div><!-- /.col-lg-4 product-div -->
+        </div>
+
+        <div class="col-md-4 product-div jumbotron card">
+          <h4>10 Credits</h4>
+          <h5 class='old-price'>$639.99</h5>
+          <h3 class='new-price'>$489.99</h3>
+          <% if @job_id != nil %>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:48999, j_id: @job_id), class: 'btn btn-primary' %></p>
+          <% else %>
+            <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:48999), class: 'btn btn-primary' %></p>
+          <% end %>
+        </div>
+        <!-- /.col-lg-4 product-div -->
       </div><!-- /.row -->
     </div>
+
 <% else %>
-    <div class="container marketing">
+
+    <div class="">
         <!-- Three columns of text below the carousel -->
-        <div class="col-lg-4 product-div jumbotron card">
-          <h4>10 Credits</h4>
-          <h5 class='old-price'>$318.97<h5>
-          <h3 class='new-price'>$199.97</h3>
-          <% if @job_id != nil %>
-            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:19997, j_id: @job_id), class: 'btn btn-primary' %></p>
-          <% else %>
-            <p><%= link_to "Purchase", new_charge_path(credits: 5, amount:19997), class: 'btn btn-primary' %></p>
-          <% end %>
-        </div><!-- /.col-lg-4 product-div -->
+        <div class="row">
+          <div class="col-md-4 product-div jumbotron card">
+            <h4>1 Credit</h4>
+            <h5 class='old-price'>$64.89</h5>
+            <h3 class='new-price'>$44.99</h3>
+            <% if @job_id != nil %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:4497, j_id: @job_id), class: 'btn btn-primary' %></p>
+            <% else %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:4497), class: 'btn btn-primary' %></p>
+            <% end %>
+          </div>
+
+          <div class="col-lg-4 mid-product-div jumbotron card">
+            <h4>5 Credits</h4>
+            <h5 class='old-price'>$318.97<h5>
+            <h3 class='new-price'>$199.97</h3>
+            <% if @job_id != nil %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:19997, j_id: @job_id), class: 'btn btn-primary' %></p>
+            <% else %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:19997), class: 'btn btn-primary' %></p>
+            <% end %>
+          </div><!-- /.col-lg-4 product-div -->
+
+          <div class="col-md-4 product-div jumbotron card">
+            <h4>10 Credits</h4>
+            <h5 class='old-price'>$639.99</h5>
+            <h3 class='new-price'>$419.99</h3>
+            <% if @job_id != nil %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:41999, j_id: @job_id), class: 'btn btn-primary' %></p>
+            <% else %>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 1, amount:41999), class: 'btn btn-primary' %></p>
+            <% end %>
+          </div>
+
+        </div>
       </div><!-- /.row -->
     </div>
 <% end %>
