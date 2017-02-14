@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
   <div>
-    <h1>Great!</h1><h2> We'll automatically apply to all thr right places for you</h2>
+    <h1>Great!</h1><h2> We'll automatically apply to all the right places for you</h2>
     <%= form_for @user, url: update_user_path, method: :patch, html: {multipart: true} do |f|%>
       <% if @user.phone_number == nil %>
         <h4>Phone Number</h4>
