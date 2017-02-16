@@ -69,11 +69,11 @@
           <div class="col-lg-4 mid-product-div jumbotron card">
             <h4>5 Credits</h4>
             <h5 class='old-price'>$324.97<h5>
-            <h3 class='new-price'>$199.97</h3>
+            <h3 class='new-price'>$169.97</h3>
             <% if @job_id != nil %>
-              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:19997, j_id: @job_id), class: 'btn btn-primary' %></p>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:16997, j_id: @job_id), class: 'btn btn-primary' %></p>
             <% else %>
-              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:19997), class: 'btn btn-primary' %></p>
+              <p><%= link_to "Get Credits", new_charge_path(credits: 5, amount:16997), class: 'btn btn-primary' %></p>
             <% end %>
           </div><!-- /.col-lg-4 product-div -->
 
