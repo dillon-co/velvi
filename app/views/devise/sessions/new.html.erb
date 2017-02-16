@@ -2,33 +2,9 @@
   <h1>Life Should Be Fun</h1>
 </div>
 <div class="col-lg-6 container">
-  <div class="jumbotron">  
+  <div class="jumbotron">
     <h2>Your're a wizard, Harry</h2>
-    <h5 class="subtitle">Sign in to apply to all at once!</h5>
-
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <div class="field">
-        <%= f.label :email %><br />
-        <%= f.email_field :email, autofocus: true %>
-      </div>
-
-      <div class="field">
-        <%= f.label :password %><br />
-        <%= f.password_field :password, autocomplete: "off" %>
-      </div>
-
-      <% if devise_mapping.rememberable? -%>
-        <div class="field">
-          <%= f.check_box :remember_me %>
-          <%= f.label :remember_me %>
-        </div>
-      <% end -%>
-
-      <div class="actions">
-        <%= f.submit "Log in", class: 'btn btn-primary' %>
-      </div>
-    <% end %>
-
-    <%= render "devise/shared/links" %>
-  </div>  
+    <h5 class="subtitle">Sign in to apply to all jobs at once!</h5>
+      <%= render 'layouts/landing' %>
+  </div>
 </div>

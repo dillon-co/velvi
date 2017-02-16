@@ -1,27 +1,26 @@
 <nav class="navbar navbar-inverse bg-faded">
-  <%= link_to "Velvi", root_path, class: 'navbar-brand' %>
-  <div class="collapse">
-
-    <ul class="nav justify-content-end">
-      <li class="nav-item pull-right">
-        <%= link_to "About", about_path, class: 'nav-link' %>
-      </li>
-        <% if user_signed_in? %>
-         <li class='nav-item btn-primary pull-lg-right'>
-          <%= link_to "Share", share_path, class: 'nav-link btn btn-outline active' %>
-          </li>
-          <li class='nav-item active pull-lg-right'>
-              <%= link_to 'Profile', profile_path, class: 'nav-link' %>
-          </li>
-        <% else %>
-          <li class='nav-item btn-primary pull-lg-right'>
-            <%= link_to "Sign Up", user_linkedin_omniauth_authorize_path, class: 'nav-link btn active' %>
-          </li>
-           <li class='nav-item active pull-lg-right'>
-            <%= link_to 'Login', new_user_session_path, class: 'nav-link btn btn-outline'  %>
-          </li>
-        <% end %>
-      </li>
-    </ul>
+  <div class="row">
+    <%= link_to " ", root_path, class: 'navbar-brand' %>
+    <%= link_to "Velvi", root_path, class: 'navbar-brand mb-0' %>
+    <div class="my-2 my-lg-0">
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <%= link_to "About", about_path, class: 'nav-link' %>
+        </li>
+          <% if user_signed_in? %>
+           <li class='nav-item pull-sm-right'>
+            <%= link_to "Share", share_path, class: 'nav-link btn btn-primary' %>
+            </li>
+            <li class='nav-item active pull-sm-right'>
+                <%= link_to 'Profile', profile_path, class: 'nav-link ' %>
+            </li>
+          <% else %>
+             <li class='nav-item pull-sm-right'>
+              <%= link_to 'Log in', new_user_session_path, class: 'nav-link btn btn-primary'  %>
+            </li>
+          <% end %>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
