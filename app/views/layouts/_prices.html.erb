@@ -25,6 +25,8 @@
                   <p><%= flash[:error] %></p>
                 </div>
               <% end %>
+              <%= hidden_field_tag :amount, 6489 %>
+              <%= hidden_field_tag :credits, 1 %>
             </article>
 
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -47,6 +49,8 @@
                   <p><%= flash[:error] %></p>
                 </div>
               <% end %>
+              <%= hidden_field_tag :amount, 20997 %>
+              <%= hidden_field_tag :credits, 5 %>
             </article>
 
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -69,6 +73,8 @@
                   <p><%= flash[:error] %></p>
                 </div>
               <% end %>
+              <%= hidden_field_tag :amount, 48999 %>
+              <%= hidden_field_tag :credits, 10 %>
             </article>
 
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -99,6 +105,8 @@
                     <p><%= flash[:error] %></p>
                   </div>
                 <% end %>
+                <%= hidden_field_tag :amount, 4499 %>
+                <%= hidden_field_tag :credits, 1 %>
               </article>
 
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -121,6 +129,8 @@
                     <p><%= flash[:error] %></p>
                   </div>
                 <% end %>
+                <%= hidden_field_tag :amount, 16997 %>
+                <%= hidden_field_tag :credits, 5 %>
               </article>
 
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -143,14 +153,14 @@
                     <p><%= flash[:error] %></p>
                   </div>
                 <% end %>
-                <%= hidden_field_tag :amount, 50 %>
+                <%= hidden_field_tag :amount, 41999 %>
                 <%= hidden_field_tag :credits, 10 %>
               </article>
 
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                       data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
                       data-description="Credits"
-                      data-amount=0
+                      data-amount=41999
                       data-locale="auto"></script>
             <% end %>
           </div>
