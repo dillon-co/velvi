@@ -10,7 +10,7 @@ class ChargesController < ApplicationController
 
   def create
      # Amount in cents
-    @job_id = params[:j_id]
+    # @job_id = params[:j_id]
     @amount = params[:amount]
     token = params[:stripeToken]
 
@@ -25,16 +25,12 @@ class ChargesController < ApplicationController
       }
     end
 
-    current_user.update(credits: current_credits+params[:credits].to_i)
-
-
     charge_metadata ||= {}
 
     customer = Stripe::Customer.create(
       card: token,
       email: current_user.email
     )
-
 
     charge = Stripe::Charge.create(
       :customer    => customer.id,
@@ -44,12 +40,13 @@ class ChargesController < ApplicationController
       :metadata    => charge_metadata
     )
 
-    render nothing: true
-  # redirect_to edit_job_link_path(current_user.job_links.last)
+    current_user.update(credits: current_credits+params[:credits].to_i)
+
+    redirect_to :back
 
   rescue Stripe::CardError => e
     flash[:error] = e.message
-    redirect_to new_charge_path
+    redirect_to :back
   end
 
   private

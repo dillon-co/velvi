@@ -143,12 +143,14 @@
                     <p><%= flash[:error] %></p>
                   </div>
                 <% end %>
+                <%= hidden_field_tag :amount, 50 %>
+                <%= hidden_field_tag :credits, 10 %>
               </article>
 
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                       data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
                       data-description="Credits"
-                      data-amount=41999
+                      data-amount=0
                       data-locale="auto"></script>
             <% end %>
           </div>
