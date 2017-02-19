@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-    WelcomeMailer.welcome_email(self).deliver
+    WelcomeMailer.welcome_email(self)
   end
 
 end

@@ -79,8 +79,8 @@ config.paperclip_defaults = {
    :port                 => 587,
    :user_name            => 'dillon@velvi.io',
    :password             => ENV['VELVI_EMAIL_PASSWORD'],
-   :authentication       => "plain",
-  :enable_starttls_auto => true
+   :authentication       => "login",
+   :enable_starttls_auto => true
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
