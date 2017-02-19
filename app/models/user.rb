@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
 
   has_many :job_links
   after_create :create_user_code
-
+  after_create :send_welcome_email
 
 
   def self.from_omniauth(auth, referral_code="")
@@ -90,6 +90,10 @@ class User < ActiveRecord::Base
     parent = User.find_by(referral_code: parent_code)
     past_money_earned = parent.money_earned
     !!past_money_earned ? parent.update(money_earned: past_money_earned+3) : parent.update(money_earned: 3)
+  end
+
+  def send_welcome_email
+    WelcomeMailer.welcome_email(self).deliver
   end
 
 end
