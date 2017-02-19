@@ -24,6 +24,8 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  config.force_ssl
+
 config.paperclip_defaults = {
   storage: :s3,
   s3_credentials: {

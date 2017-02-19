@@ -20,13 +20,13 @@
 //   return this.progressBarTimeout = setTimeout(this.showProgressBar, 0);
 // };
 
-function generateProgressBar(){
-    setInterval(function(){
-      console.log($('#pb').value)
-      var oldValue = document.getElementById('pb').value
-      document.getElementById('pb').value = oldValue + 1
-    }, 5)
-  }  
+// function generateProgressBar(){
+//     setInterval(function(){
+//       console.log($('#pb').value)
+//       var oldValue = document.getElementById('pb').value
+//       document.getElementById('pb').value = oldValue + 1
+//     }, 5)
+//   }
 
 // console.log(window.location.search.substring(1).split('=')[0] == 'n_jid');
 // var params = window.location.search.substring(1).split('=')
@@ -40,3 +40,46 @@ function generateProgressBar(){
 //          }
 //     })
 //   }, 1000)
+
+relatedSearches = []
+
+$(document).ready(function() {
+  userCreds = parseInt($("#user-credits").text().split(": ")[1])
+  console.log(userCreds)
+  $("input[name=related-search]:checked").each(function(){
+    relatedSearches.push($(this).val());
+  });
+  console.log(relatedSearches.length)
+  $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length)
+   if(relatedSearches.length > userCreds){
+     $("#submit").text("Get Credits To Apply");
+      $("#submit").attr('disabled','disabled')
+   }else{
+     $("#submit").text("Auto Apply");
+       $("#submit").removeAttr('disabled');
+   }
+});
+
+function getCheckedSearches(){
+  relatedSearches = []
+  $("input[name=related-search]:checked").each(function(){
+    relatedSearches.push($(this).val());
+    if(relatedSearches.length > userCreds){
+      $("#submit").text("Get Credits To Apply")
+      $("#submit").attr('disabled','disabled')
+    }else{
+      $("#submit").text("Auto Apply");
+      $("#submit").removeAttr('disabled');
+    }
+  });
+  console.log(relatedSearches.length)
+  $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length)
+}
+
+function checkUserCredits(){
+  // console.log(relatedSearches.length)
+    j_id=window.location.search.split("=")[1]
+    $.post(window.location.origin+'/apply_to_related_searches', {j: j_id, r_searches: relatedSearches})
+    $('form.edit_user').submit();
+
+}

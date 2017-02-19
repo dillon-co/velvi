@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     get 'ref' => 'users/registrations#new'
   end
 
+  post 'apply_to_related_searches' => 'pages#apply_to_related_searches'
+
   root to: "job_links#new"
 
   get 'about' => 'pages#about', as: :about

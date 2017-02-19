@@ -18,7 +18,7 @@ class JobLinksController < ApplicationController
     job_link = current_user.job_links.new(job_link_params)
     if job_link.save
       # redirect_to loading_path(n_jid: job_link.id)
-      redirect_to resume_and_phone_path
+      redirect_to resume_and_phone_path(j: job_link.id)
     else
       render :new
     end

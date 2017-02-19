@@ -1,0 +1,159 @@
+<div id="myCarousel" class="jumbotron">
+  <div class="container">
+    <div class="text-lg-left">
+      <h1>You're Almost There!</h1>
+      <p>Credits are used for applying to multiple jobs at once. You can do it
+        the old fashioned way and apply to each one individually, or you can
+        become the wizard you were born to be, and apply to all of them at the
+        same time.
+      </p><br>
+      <p> Each credit is an acceptance letter to Hogwarts, we promise.</p>
+    </div>
+  </div>
+</div>
+<% if current_user.parent_code == nil %>
+    <div class="">
+        <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="col-md-4 product-div jumbotron card">
+          <h4>1 Credit</h4>
+          <h3 class='new-price'>$64.89</h3>
+          <%= form_tag charges_path do %>
+            <article>
+              <% if flash[:error].present? %>
+                <div id="error_explanation">
+                  <p><%= flash[:error] %></p>
+                </div>
+              <% end %>
+            </article>
+
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                    data-description="Credits"
+                    data-amount=6489
+                    data-locale="auto"></script>
+          <% end %>
+
+        </div>
+        <!-- /.col-lg-4 product-div jumbotron panel --><!-- /.col-lg-4 -->
+        <div class="col-md-4 mid-product-div jumbotron card">
+          <h4>5 Credits</h4>
+          <h5 class='old-price'>$324.97</h5>
+          <h3 class='new-price'>$209.97</h3>
+          <%= form_tag charges_path do %>
+            <article>
+              <% if flash[:error].present? %>
+                <div id="error_explanation">
+                  <p><%= flash[:error] %></p>
+                </div>
+              <% end %>
+            </article>
+
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                    data-description="Credits"
+                    data-amount=20997
+                    data-locale="auto"></script>
+          <% end %>
+
+        </div>
+
+        <div class="col-md-4 product-div jumbotron card">
+          <h4>10 Credits</h4>
+          <h5 class='old-price'>$649.99</h5>
+          <h3 class='new-price'>$489.99</h3>
+          <%= form_tag charges_path do %>
+            <article>
+              <% if flash[:error].present? %>
+                <div id="error_explanation">
+                  <p><%= flash[:error] %></p>
+                </div>
+              <% end %>
+            </article>
+
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                    data-description="Credits"
+                    data-amount=48999
+                    data-locale="auto"></script>
+          <% end %>
+
+        </div>
+        <!-- /.col-lg-4 product-div -->
+      </div><!-- /.row -->
+    </div>
+
+<% else %>
+
+    <div class="">
+        <!-- Three columns of text below the carousel -->
+        <div class="row">
+          <div class="col-md-4 product-div jumbotron card">
+            <h4>1 Credit</h4>
+            <h5 class='old-price'>$64.89</h5>
+            <h3 class='new-price'>$44.99</h3>
+            <%= form_tag charges_path do %>
+              <article>
+                <% if flash[:error].present? %>
+                  <div id="error_explanation">
+                    <p><%= flash[:error] %></p>
+                  </div>
+                <% end %>
+              </article>
+
+              <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                      data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                      data-description="Credits"
+                      data-amount=4499
+                      data-locale="auto"></script>
+            <% end %>
+
+          </div>
+
+          <div class="col-lg-4 mid-product-div jumbotron card">
+            <h4>5 Credits</h4>
+            <h5 class='old-price'>$324.97<h5>
+            <h3 class='new-price'>$169.97</h3>
+            <%= form_tag charges_path do %>
+              <article>
+                <% if flash[:error].present? %>
+                  <div id="error_explanation">
+                    <p><%= flash[:error] %></p>
+                  </div>
+                <% end %>
+              </article>
+
+              <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                      data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                      data-description="Credits"
+                      data-amount=16997
+                      data-locale="auto"></script>
+            <% end %>
+
+          </div><!-- /.col-lg-4 product-div -->
+
+          <div class="col-md-4 product-div jumbotron card">
+            <h4>10 Credits</h4>
+            <h5 class='old-price'>$649.99</h5>
+            <h3 class='new-price'>$419.99</h3>
+            <%= form_tag charges_path do %>
+              <article>
+                <% if flash[:error].present? %>
+                  <div id="error_explanation">
+                    <p><%= flash[:error] %></p>
+                  </div>
+                <% end %>
+              </article>
+
+              <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                      data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                      data-description="Credits"
+                      data-amount=41999
+                      data-locale="auto"></script>
+            <% end %>
+          </div>
+
+        </div>
+      </div><!-- /.row -->
+    </div>
+<% end %>

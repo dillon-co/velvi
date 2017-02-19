@@ -151,6 +151,15 @@ class JobLink < ActiveRecord::Base
     end
   end
 
+  def related_searches
+    agent = Mechanize.new
+    agent.get('http://www.indeed.com/')
+    fill_out_search_form(agent)
+    r_s  = agent.page.search(".related_searches_list").first.text
+    searches = r_s.split('-').map!.with_index {|q, i| i > 0 ? q : q.split(": ").last}
+    return searches
+  end
+
 
   def user_attribute_array
     ["#{user.first_name} #{user.last_name}", user.email, user.phone_number, user.cover_letter]

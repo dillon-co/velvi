@@ -52,33 +52,41 @@ class PagesController < ApplicationController
 
   def add_user_resume_and_phone
     @user = current_user
+    @job_id = params["j"]
+    @job_link = JobLink.find(@job_id)
+    @related_searches = @job_link.related_searches
   end
 
   def update_user
     user = current_user
     data_hash = Hash.new
+
     data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
     data_hash[:resume] = params["user"]["resume"] if params['user'] != nil
     data_hash[:credits] = user.credits - 1 if user.credits > 0
-    if data_hash == {} && user.phone_number.present? && user.resume.present?
+    if data_hash.length == 1 && user.phone_number.present? && user.resume.present?
       check_for_credits_and_redirect(user)
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
         check_for_credits_and_redirect(user)
       else
-        redirect_to resume_and_phone_path, notice: "All Fields Are Required"
+        redirect_to resume_and_phone_path(j: params['j']), notice: "All Fields Are Required"
       end
     else
-      redirect_to resume_and_phone_path, notice: "All Fields Are Required"
+      redirect_to resume_and_phone_path(j: params['j']), notice: "All Fields Are Required"
     end
+  end
+
+  def apply_to_related_searches
+    RelatedSearchesWorker.perform_async(params)
+    render nothing: true
   end
 
   private
 
   def check_for_credits_and_redirect(user)
     if user.credits > 0
-      binding.pry
       user.job_links.last.call_search_worker
       redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
     else

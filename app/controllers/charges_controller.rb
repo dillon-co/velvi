@@ -44,7 +44,8 @@ class ChargesController < ApplicationController
       :metadata    => charge_metadata
     )
 
-  redirect_to edit_job_link_path(current_user.job_links.last)
+    render nothing: true
+  # redirect_to edit_job_link_path(current_user.job_links.last)
 
   rescue Stripe::CardError => e
     flash[:error] = e.message
