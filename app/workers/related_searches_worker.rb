@@ -1,4 +1,4 @@
-require 'models/job_link'
+
 class RelatedSearchesWorker
   include Sidekiq::Worker
   def perform(p)
@@ -6,7 +6,7 @@ class RelatedSearchesWorker
     location, skill = j.job_location, j.skill_level
     puts "\n\n#{p}\n\n"
     p['r_searches'].each do |s|
-      jl = JobLlink.create(job_title: s, job_location: location, skill_level: skill)
+      jl = ::JobLlink.create(job_title: s, job_location: location, skill_level: skill)
       jl.call_search_worker
     end
   end
