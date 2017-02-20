@@ -1,7 +1,7 @@
 class RelatedSearchesWorker
   include Sidekiq::Worker
   def perform(p)
-    j = JobLink.find(p['j'].to_i)
+    j = ::JobLink.find(p['j'].to_i)
     location, skill = j.job_location, j.skill_level
     puts "\n\n#{p}\n\n"
     p['r_searches'].each do |s|
