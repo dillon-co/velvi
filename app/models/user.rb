@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true, on: :create
 
   has_many :job_links
-  after_create :create_user_code
+  before_create :create_user_code
   after_create :send_welcome_email
 
 
@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
   def create_user_code
     code = SecureRandom.urlsafe_base64(4)
     unless User.where(referral_code: code).any?
-      self.update(referral_code: code)
+      self.referral_code = code
     else
       create_user_code
     end
