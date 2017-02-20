@@ -1,3 +1,4 @@
+require 'models/job_link'
 class RelatedSearchesWorker
   include Sidekiq::Worker
   def perform(p)
