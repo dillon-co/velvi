@@ -62,8 +62,8 @@ class PagesController < ApplicationController
     user = current_user
     data_hash = Hash.new
     puts params
-    data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
-    data_hash[:resume] = params["user"]["resume"] if params['user']["resume"] != nil
+      data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
+      data_hash[:resume] = params["user"]["resume"] if params['user']["resume"] != nil
     data_hash[:credits] = user.credits - 1 if user.credits > 0
     if data_hash.length == 1 && user.phone_number.present? && user.resume.present?
       check_for_credits_and_redirect(user)

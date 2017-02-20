@@ -21,7 +21,8 @@
               <br>
             </div>
           </div>
-          <% f.hidden_field :j, value: params['j']  %>
+          <%= f.hidden_field :j, value: params['j']  %>
+          <%= f.hidden_field :credits, value: @user.credits %>
           <div class="card col-md-5 related-searches">
             <br>
             <h4>Auto apply to these as well?</h4>
