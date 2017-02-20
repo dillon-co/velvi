@@ -36,6 +36,17 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.action_mailer.default_url_options = { :host => "www.velvi.io" }
+  config.action_mailer.smtp_settings = {
+   :address              => "smtp.gmail.com",
+   :port                 => 587,
+   :domain               => "www.velvi.io",
+   :user_name            => 'dillon@velvi.io',
+   :password             => ENV['VELVI_EMAIL_PASSWORD'],
+   :authentication       => "plain",
+   :enable_starttls_auto => true
+  }
+
   config.paperclip_defaults = {
     storage: :s3,
     s3_credentials: {

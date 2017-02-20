@@ -93,7 +93,8 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-    WelcomeMailer.welcome_email(self)
+    puts "\n\nSending the email\n\n"
+    WelcomeMailer.welcome_email(id).deliver
   end
 
 end
