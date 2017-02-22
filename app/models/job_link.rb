@@ -138,16 +138,7 @@ class JobLink < ActiveRecord::Base
                  user_cover_letter: user_attribute_array[3],
                  user_skill_level: skill_level,
                  user_search_query: job_title
-                }
-    else
-        return {
-                indeed_link: indeed_job_url,
-                title: job_attributes[0],
-                company: job_attributes[1],
-                location: job_attributes[2],
-                user_skill_level: skill_level,
-                user_search_query: job_title
-              }
+               }
     end
   end
 

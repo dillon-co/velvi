@@ -156,7 +156,9 @@ class JobApplication < ActiveRecord::Base
     puts "uploading resume"
     input_frame.file_field.set user_resume
     puts "writing cover letter"
-    fill_out_text_like_a_human(input_frame.text_field(id: 'applicant.applicationMessage'), user_cover_letter)
+    if user_cover_letter != nil
+      fill_out_text_like_a_human(input_frame.text_field(id: 'applicant.applicationMessage'), user_cover_letter)
+    end  
     # byebug
   end
 
