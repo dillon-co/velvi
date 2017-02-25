@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
 
   has_many :job_links
   before_create :create_user_code
-  after_create :send_welcome_email
+  # after_create :send_welcome_email
 
 
   def self.from_omniauth(auth, referral_code="")
