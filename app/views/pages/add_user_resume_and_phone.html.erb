@@ -26,14 +26,22 @@
           <div class="card col-md-5 related-searches">
             <br>
             <h4>Auto apply to these as well?</h4>
-            <% @related_searches.each do |s| %>
-            <div>
-                <input class='related-search' onClick='getCheckedSearches()' type="checkbox" id='<%= s %>' value="<%= s %>" checked name="related-search">
-                <label for='<%= s %>'>
-                  <%= s %>
-                </label>
-            </div>
-            <% end %>
+            <% if @related_searches != ["Looks like we couln't find any related searches"] %>
+              <% @related_searches.each do |s| %>
+                <div>
+                    <input class='related-search' onClick='getCheckedSearches()' type="checkbox" id='<%= s %>' value="<%= s %>" checked name="related-search">
+                    <label for='<%= s %>'>
+                      <%= s %>
+                    </label>
+                </div>
+              <% else %>
+                <div>
+                  <input class='related-search' onClick='getCheckedSearches()' type="checkbox" id='<%= s %>' value="<%= s %>" name="related-search">
+                  <label for='<%= s %>'>
+                    <%= s %>
+                  </label>
+                </div>
+              <% end %>
           </div>
         </div>
         <br>
@@ -65,7 +73,8 @@
 
 <br><br><br><br><br><br>
 <script>
-relatedSearches = ["Origional Job"]
+
+relatedSearches = []
 
 $(document).ready(function() {
   userCreds = parseInt($("#user-credits").text().split(": ")[1])
@@ -75,7 +84,7 @@ $(document).ready(function() {
   });
   console.log(relatedSearches.length)
   $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length)
-   if(relatedSearches.length > userCreds){
+   if(relatedSearches.length > userCreds + 1){
      $("#submit").text("Get Credits To Apply");
       $("#submit").attr('disabled','disabled')
    }else{
@@ -88,7 +97,7 @@ function getCheckedSearches(){
   relatedSearches = []
   $("input[name=related-search]:checked").each(function(){
     relatedSearches.push($(this).val());
-    if(relatedSearches.length > userCreds){
+    if(relatedSearches.length > userCreds + 1){
       $("#submit").text("Get Credits To Apply")
       $("#submit").attr('disabled','disabled')
     }else{

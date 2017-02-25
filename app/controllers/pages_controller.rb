@@ -70,7 +70,8 @@ class PagesController < ApplicationController
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
-        check_for_credits_and_redirect(user)
+        user.job_links.last.call_search_worker
+        redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
       else
         redirect_to resume_and_phone_path(j: params['j']), notice: "All Fields Are Required"
       end
@@ -84,14 +85,4 @@ class PagesController < ApplicationController
     render nothing: true
   end
 
-  private
-
-  def check_for_credits_and_redirect(user)
-    if user.credits > 0
-      user.job_links.last.call_search_worker
-      redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
-    else
-      redirect_to price_page_path, j_id: user.job_links.last.id
-    end
-  end
 end
