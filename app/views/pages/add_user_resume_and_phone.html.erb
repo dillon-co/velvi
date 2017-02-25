@@ -34,13 +34,13 @@
                       <%= s %>
                     </label>
                 </div>
+                <% end %>
               <% else %>
-                <div>
-                  <input class='related-search' onClick='getCheckedSearches()' type="checkbox" id='<%= s %>' value="<%= s %>" name="related-search">
-                  <label for='<%= s %>'>
-                    <%= s %>
-                  </label>
-                </div>
+                  <div>
+                    <label for='<%= s %>'>
+                      <%= s %>
+                    </label>
+                  </div>
               <% end %>
           </div>
         </div>
