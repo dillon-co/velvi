@@ -146,7 +146,6 @@ class JobLink < ActiveRecord::Base
     agent = Mechanize.new
     agent.get('http://www.indeed.com/')
     fill_out_search_form(agent)
-    binding.pry
     if !!(agent.page.search(".related_searches_list").first != nil )
       r_s  = agent.page.search(".related_searches_list").to_a.first.text
       searches = r_s.split('-').map!.with_index {|q, i| i > 0 ? q : q.split(": ").last}
