@@ -146,9 +146,13 @@ class JobLink < ActiveRecord::Base
     agent = Mechanize.new
     agent.get('http://www.indeed.com/')
     fill_out_search_form(agent)
-    r_s  = agent.page.search(".related_searches_list").first.text
-    searches = r_s.split('-').map!.with_index {|q, i| i > 0 ? q : q.split(": ").last}
-    return searches
+    if !!(agent.page.search(".related_searches_list"))
+      r_s  = agent.page.search(".related_searches_list").first.text
+      searches = r_s.split('-').map!.with_index {|q, i| i > 0 ? q : q.split(": ").last}
+      return searches
+    else
+      return ["Looks like we couln't find any related searches"]
+    end
   end
 
 
