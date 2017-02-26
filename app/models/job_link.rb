@@ -98,7 +98,7 @@ class JobLink < ActiveRecord::Base
   def get_available_easily_apply_and_amazon_jobs(agent, path_to_resume)
     available_jobs = []
     available_jobs << search_indeed_for('Easily apply', agent, path_to_resume)
-    available_jobs << search_indeed_for('Sponsored by Amazon.com', agent, path_to_resume)
+    # available_jobs << search_indeed_for('Sponsored by Amazon.com', agent, path_to_resume)
     available_jobs.flatten
   end
 
