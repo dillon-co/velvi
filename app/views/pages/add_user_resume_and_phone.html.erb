@@ -157,13 +157,13 @@ jQuery(document).ready(function($){
 		});
 	}
 
-	var Url = window.location.origin;
+	var Url = "https://www.velvi.io";
 	var UrlEncoded = encodeURIComponent(Url);
 	getFBShares(Url);
 	getTweets(Url);
 	getLinkedIn(Url);
 	document.getElementById("fb-share").href="http://www.facebook.com/share.php?u=" + UrlEncoded;
-	document.getElementById("tweet").href="http://twitter.com/home?status=velvi " + UrlEncoded;
+	document.getElementById("tweet").href="http://twitter.com/home?status=Check out this awesome wite that applies to jobs for you! " + UrlEncoded;
 	document.getElementById("linkedin").href="http://www.linkedin.com/shareArticle?mini=true&url=" + UrlEncoded + "&title=velvi";
 	document.getElementById("gplus-share").href="https://plus.google.com/share?url=" + UrlEncoded;
 	document.getElementById("email-share").href="mailto:?body=Hey, check out this website! They automatically apply to jobs for you! \n " + Url;
