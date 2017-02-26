@@ -28,6 +28,7 @@ Rails.application.routes.draw do
 
   get 'add_user_resume_and_phone' => 'pages#add_user_resume_and_phone', as: :resume_and_phone
   patch 'update_user' => 'pages#update_user', as: :update_user
+  patch 'add_2_credits' => 'pages#add_2_credits', as: :add_2_credits_path
 
   get 'share' => 'pages#sharing', as: :share
 

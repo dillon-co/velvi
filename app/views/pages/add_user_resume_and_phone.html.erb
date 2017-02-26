@@ -119,14 +119,19 @@ function getCheckedSearches(){
   console.log(relatedSearches.length)
   $("#related-search-cost").text("Credits Needed: "+ (relatedSearches.length+1))
 }
-
 function checkUserCredits(){
-  // console.log(relatedSearches.length)
-    j_id=window.location.search.split("=")[1]
+
     $.post(window.location.origin+'/apply_to_related_searches', {j: j_id, r_searches: relatedSearches})
     $('form.edit_user').submit();
-
 }
+
+$('.social-link').click(function(e){
+  userCreds = userCreds + 2
+  $("#user-credits").text("Your Credits: " + userCreds)
+  $.post(window,location.origin+'/add_2_credits', {u_id: <%= current_user.id %>})
+  e.prevendDefault();
+})
+
 
 jQuery(document).ready(function($){
 	function getFBShares(page){

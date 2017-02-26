@@ -29,6 +29,14 @@ class PagesController < ApplicationController
     end
   end
 
+  def add_2_credits
+    user = User.find(params[:u_id].to_i)
+    new_credits = user.credits + 2
+    user.update(credits: new_credits)
+    render nothing: true
+  end
+
+
   def mission
   end
 
