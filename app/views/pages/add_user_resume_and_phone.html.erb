@@ -84,7 +84,7 @@ $(document).ready(function() {
     relatedSearches.push($(this).val());
   });
   console.log(relatedSearches.length)
-  $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length+1)
+  $("#related-search-cost").text("Credits Needed: "+ (relatedSearches.length+1))
    if(relatedSearches.length + 1 > userCreds + 1){
      $("#submit").text("Get Credits To Apply");
       $("#submit").attr('disabled','disabled')
@@ -107,7 +107,7 @@ function getCheckedSearches(){
     }
   });
   console.log(relatedSearches.length)
-  $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length+1)
+  $("#related-search-cost").text("Credits Needed: "+ (relatedSearches.length+1))
 }
 
 function checkUserCredits(){
