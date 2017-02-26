@@ -71,26 +71,37 @@ class PagesController < ApplicationController
     data_hash = Hash.new
     data_hash[:phone_number] = params["user"]["phone_number"] unless user.phone_number.present?
     data_hash[:resume] = params["user"]["resume"] if params['user']["resume"] != nil
-    data_hash[:credits] = user.credits - 1 if user.credits > 0
+    data_hash[:credits] = user.credits - params["user"]["credits_needed"].to_i if user.credits > 0
     if data_hash.length == 1 && user.phone_number.present? && user.resume.present?
-      user.job_links.last.call_search_worker
-      redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
+      check_for_credits_and_redirect(user, params[:user][:credits_needed].to_i, params['user']['j'])
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
-        user.job_links.last.call_search_worker
-        redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
+        check_for_credits_and_redirect(user, params[:user][:credits_needed].to_i, params['user']['j'])
       else
-        redirect_to resume_and_phone_path(j: params['j']), notice: "All Fields Are Required"
+        redirect_to resume_and_phone_path({j: params['user']['j']}), notice: "All Fields Are Required"
       end
     else
-      redirect_to resume_and_phone_path(j: params['j']), notice: "All Fields Are Required"
+      redirect_to resume_and_phone_path({j: params['user']['j']}), notice: "All Fields Are Required"
     end
   end
 
   def apply_to_related_searches
     RelatedSearchesWorker.perform_async(params)
     render nothing: true
+  end
+
+  private
+
+  def check_for_credits_and_redirect(user, credits_needed, j_id)
+    user_creds = user.credits
+    if user_creds >= credits_needed
+      user.update(credits: user_creds - credits_needed)
+      user.job_links.last.call_search_worker
+      redirect_to profile_path, notice: "Thanks! we'll find and apply to all the right jobs on your behalf."
+    else
+      redirect_to resume_and_phone_path({j: j_id}), notice: "You don't have enough credits!"
+    end
   end
 
 end
