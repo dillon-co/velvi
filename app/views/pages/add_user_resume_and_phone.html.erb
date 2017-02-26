@@ -85,7 +85,7 @@ $(document).ready(function() {
   });
   console.log(relatedSearches.length)
   $("#related-search-cost").text("Credits Needed: "+ relatedSearches.length)
-   if(relatedSearches.length > userCreds + 1){
+   if(relatedSearches.length + 1 > userCreds + 1){
      $("#submit").text("Get Credits To Apply");
       $("#submit").attr('disabled','disabled')
    }else{
@@ -98,7 +98,7 @@ function getCheckedSearches(){
   relatedSearches = []
   $("input[name=related-search]:checked").each(function(){
     relatedSearches.push($(this).val());
-    if(relatedSearches.length > userCreds + 1){
+    if(relatedSearches.length + 1 > userCreds){
       $("#submit").text("Get Credits To Apply")
       $("#submit").attr('disabled','disabled')
     }else{
