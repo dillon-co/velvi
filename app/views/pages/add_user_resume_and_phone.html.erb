@@ -55,6 +55,16 @@
 
 <button id='submit' class='btn btn-primary' onClick='checkUserCredits()' ></button>
 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Get Credits</button>
+<hr>
+<div class='social-share'>
+  <h4>Get 2 credits each time you share ($120 value)</h4>
+		<!-- Social Media Share Buttons -->
+		<a class="social-link facebook" href="" id="fb-share" rel="nofollow" target="_blank" title="Share on Facebook"><i class="fa fa-facebook"></i> Share</a>
+		<a class="social-link twitter" href="" id="tweet" rel="nofollow" target="_blank" title="Tweet this Page"><i class="fa fa-twitter"></i> Tweet</a>
+		<a class="social-link linkedin" href="" id="linkedin" rel="nofollow" target="_blank" title="Share on LinkedIn"><i class="fa fa-linkedin"></i> LinkedIn</a>
+		<a class="social-link gplus" href="" id="gplus-share" title="Plus 1 on Google+"><i class="fa fa-google-plus"></i></a>
+		<a class="social-link email" href="" id="email-share" title="Email to a Friend"><i class="fa fa-envelope"></i></a>
+</div>
 
 <div class="modal" id="myModal">
     <div class="modal-dialog modal-lg">
@@ -117,5 +127,47 @@ function checkUserCredits(){
     $('form.edit_user').submit();
 
 }
+
+jQuery(document).ready(function($){
+	function getFBShares(page){
+		var shares;
+		$.getJSON("http://graph.facebook.com/?ids=" + page, function(data){
+			if (data[page].shares > 1){
+				shares = data[page].shares;
+				$("#fb-share").append(" (" + shares + ")");
+			}
+		});
+	}
+	function getTweets(page){
+		var tweets;
+		$.getJSON("http://urls.api.twitter.com/1/urls/count.json?url=" + page + "&callback=?", function(data){
+			if (data.count > 1) {
+				tweets = data.count;
+				$("#tweet").append(" (" + tweets + ")");
+			}
+		});
+	}
+	function getLinkedIn(page){
+		var linkedinCount;
+		$.getJSON("http://www.linkedin.com/countserv/count/share?url=" + page + "&callback=?", function(data){
+			if (data.count > 1) {
+				linkedinCount = data.count;
+				$("#linkedin").append(" (" + linkedinCount + ")");
+			}
+		});
+	}
+
+	var Url = window.location.href;
+	var UrlEncoded = encodeURIComponent(Url);
+	getFBShares(Url);
+	getTweets(Url);
+	getLinkedIn(Url);
+	document.getElementById("fb-share").href="http://www.facebook.com/share.php?u=" + UrlEncoded;
+	document.getElementById("tweet").href="http://twitter.com/home?status=velvi " + UrlEncoded;
+	document.getElementById("linkedin").href="http://www.linkedin.com/shareArticle?mini=true&url=" + UrlEncoded + "&title=velvi";
+	document.getElementById("gplus-share").href="https://plus.google.com/share?url=" + UrlEncoded;
+	document.getElementById("email-share").href="mailto:?body=Take a look at this page I found: Velvi You can read it here: " + Url;
+});
+
 
 </script>
