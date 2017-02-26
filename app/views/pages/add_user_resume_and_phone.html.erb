@@ -127,12 +127,11 @@ function checkUserCredits(){
     $('form.edit_user').submit();
 }
 
-$('.social-link').click(function(e){
+$('.social-link').click(function(){
   userCreds = userCreds + 2
   $("#user-credits").text("Your Credits: " + userCreds)
   getCheckedSearches();
-  $.post(window,location.origin+'/add_2_credits', {u_id: <%= current_user.id %>})
-  e.prevendDefault();
+  $.ajax({method: "PATCH", url: window.location.origin+'/add_2_credits', data: {u_id: <%= current_user.id %>}});
 })
 
 
