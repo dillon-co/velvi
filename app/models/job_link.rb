@@ -113,7 +113,6 @@ class JobLink < ActiveRecord::Base
       indeed_job_address = "http://www.indeed.com#{title.at('a').attributes['href'].value}"
       available_jobs << add_available_jobs_to_array(agent, job_title_company_location_array, path_to_resume, indeed_job_address)
     end
-
     available_jobs
   end
 
@@ -195,6 +194,10 @@ class JobLink < ActiveRecord::Base
         next
       end
     end
+  end
+
+  def u_phone_number
+    self.user.phone_number
   end
 
   def call_application_worker

@@ -77,6 +77,7 @@ class PagesController < ApplicationController
     elsif data_hash != {}
       user.update(data_hash)
       if user.save && data_hash[:resume] != nil
+        user.update_all_job_links_with_phone_number if data_hash[:phone_number] != nil
         check_for_credits_and_redirect(user, params[:user][:credits_needed].to_i, params['user']['j'])
       else
         redirect_to resume_and_phone_path({j: params['user']['j']}), notice: "All Fields Are Required"

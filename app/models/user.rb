@@ -59,6 +59,8 @@ class User < ActiveRecord::Base
 
   has_many :job_links
   before_create :create_user_code
+
+
   # after_create :send_welcome_email
 
 
@@ -95,6 +97,10 @@ class User < ActiveRecord::Base
   def send_welcome_email
     puts "\n\nSending the email\n\n"
     WelcomeMailer.welcome_email(id).deliver
+  end
+
+  def update_all_job_links_with_phone_number
+    self.job_links.all.each { |j| j.update(user_phone_number: phone_number)}
   end
 
 end
