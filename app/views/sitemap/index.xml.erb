@@ -1,0 +1,12 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <% @job_links.each do |job| %>
+  <url>
+    <loc><%= job_link_path(job) %></loc>
+    <lastmod>
+      <%= job.updated_at.strftime('%Y-%m-%d') %>
+    </lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <% end %>
+</urlset>
