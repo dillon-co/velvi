@@ -1,3 +1,8 @@
+<% title @job_link.job_title %>
+<% meta_tag :keywords, [@job_applications.map {|j| j.title }.join(','), @job_applications.map {|j| j.company }.join(',')].join(',') %>
+
+
+
 <div class='col-lg-9'>
   <br>
   <h1><%= @job_applications.count %> Jobs Applied To</h1>
@@ -9,12 +14,12 @@
 <br>
 <div class='row>'>
   <div class="container">
-   
+
       <div class='col-lg-2'>
        <%#= f.submit "Apply To Selected", class: 'btn btn-primary' %>
       </div>
       <br>
-      <br> 
+      <br>
        <% @job_applications.each  do |job| %>
           <div>
            <div class='col-lg-11'>
@@ -22,14 +27,14 @@
              <h5><%= job.company %>; <%= job.location %></h5>
              <p><%= link_to "Description on Indeed.com", job.indeed_link, class: 'subtitle' %></p>
            </div>
-            
+
           </div>
             <br>
             <br>
             <br>
             <br>
             <hr>
-             
+
 
        <% end %>
   </div>
