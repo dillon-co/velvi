@@ -148,7 +148,7 @@ class JobLink < ActiveRecord::Base
     if !!(agent.page.search(".related_searches_list").first != nil )
       r_s  = agent.page.search(".related_searches_list").to_a.first.text
       searches = r_s.split('-').map!.with_index {|q, i| i > 0 ? q : q.split(": ").last}
-      return searches
+      return searches.first.split(' ')
     else
       return ["Looks like we couln't find any related searches"]
     end

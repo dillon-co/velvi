@@ -1,6 +1,6 @@
 class CreateJobLinks < ActiveRecord::Migration
   def change
-    create_table :job_links do |t| 
+    create_table :job_links do |t|
 
       t.string :job_title
       t.string :job_type
@@ -13,3 +13,5 @@ class CreateJobLinks < ActiveRecord::Migration
     end
   end
 end
+
+"Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work."

@@ -3,9 +3,9 @@
   <div class=''>
     <h1>Mass apply for free</h1>
      <%= link_to "Click Here To Sign Up", new_user_registration_path, class: 'btn btn-primary' %>
-  </div>   
-</div>  
-<hr/> 
+  </div>
+</div>
+<hr/>
 <div class="sign-up">
     <h2>$7.99</h2>
     <br>
@@ -22,14 +22,14 @@
       <%= f.label  "email" %><br />
       <%= f.email_field :user_email, autofocus: true %>
     </div>
-    
+
     <%= f.label  "Phone Number" %><br />
     <%= f.text_field :user_phone_number %><br />
 
     <label>Upload resumé</label><br/>
     <%= f.file_field :user_resume %><br/><br/>
-  </div >  
-  <div class='col-md-6'>  
+  </div >
+  <div class='col-md-6'>
     <label> Add a generic cover letter </label><br />
     <%= f.text_area :user_cover_letter, class: "cover-letter" %><br /><br />
     <%= f.hidden_field 'done_editing', value: 'true' %>

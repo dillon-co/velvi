@@ -38,6 +38,7 @@ gem 'sidekiq'
 gem "sidekiq-cron", "~> 0.4.0"
 gem 'sinatra', :require => nil
 gem 'redis-rails', '~> 4.0.0'
+gem 'rails_12factor', group: :production
 
 gem 'poltergeist'
 
@@ -55,7 +56,6 @@ gem "paperclip", "~> 5.0.0.beta1"
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
-gem 'rails_12factor', group: :production
 
 gem 'devise'
 gem 'omniauth-oauth2', '~> 1.3.1'
